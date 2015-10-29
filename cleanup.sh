@@ -12,7 +12,7 @@ echo "the output is ${cleanupARR[@]}"
 
 aws ec2 terminate-instances --instance-ids ${cleanupARR[@]} 
 
-echo "Cleaning up existing Load Balancers"
+echo "-Cleaning up existing Load Balancers"
 mapfile -t cleanupLBARR < <(aws elb describe-load-balancers --output json | grep LoadBalancerName | sed "s/[\"\:\, ]//g" | sed "s/LoadBalancerName//g")
 
 echo "The LBs are ${cleanupLBARR[@]}"
@@ -31,7 +31,7 @@ mapfile -t dbInstanceARR < <(aws rds describe-db-instances --output json | grep 
 
 if [ ${#dbInstanceARR[@]} -gt 0 ]
    then
-   echo "Deleting existing RDS database-instances"
+   echo "-Deleting existing RDS database-instances"
    LENGTH=${#dbInstanceARR[@]}  
 
    # http://docs.aws.amazon.com/cli/latest/reference/rds/wait/db-instance-deleted.html
@@ -57,9 +57,9 @@ if [ ${#SCALENAME[@]} -gt 0 ]
 echo "SCALING GROUPS to delete..."
 #aws autoscaling detach-launch-
 
-aws autoscaling delete-auto-scaling-group --auto-scaling-group-name itmo-544-extended-auto-scaling-group-2
+aws autoscaling delete-auto-scaling-group --auto-scaling-group-name ${SCALENAME[@]}
 
-aws autoscaling delete-launch-configuration --launch-configuration-name itmo544-launch-config
+aws autoscaling delete-launch-configuration --launch-configuration-name ${LAUNCHCONF[@]}
 
 #aws autoscaling update-auto-scaling-group --auto-scaling-group-name $SCALENAME --min-size 0 --max-size 0
 
