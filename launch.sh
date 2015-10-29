@@ -1,7 +1,8 @@
 #!/usr/local/bin/bash
-#declare an array in bash 
+
 ./cleanup.sh
 
+#declare an array in bash 
 declare -a instanceARR
 
 mapfile -t instanceARR < <(aws ec2 run-instances --image-id $1 --count $2 --instance-type $3 --key-name $6 --security-group-ids $4 --subnet-id $5 --associate-public-ip-address --iam-instance-profile Name=$7 --user-data file://../itmo-544-env/install-webserver.sh --output table | grep InstanceId | sed "s/|//g" | tr -d ' ' | sed "s/InstanceId//g")
