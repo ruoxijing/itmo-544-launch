@@ -15,7 +15,7 @@ echo $ELBURL
 
 echo -e "\nFinished launching ELB and sleeping 20 seconds"
 for i in {0..20}; do echo -ne '.'; sleep 1;done
-echo "\n"
+echo -e "\n"
 
 aws elb register-instances-with-load-balancer --load-balancer-name itmo544jrx-lb --instances ${instanceARR[@]}
 
@@ -25,12 +25,15 @@ echo -e "\nWaiting an additional 3 minutes - before opening the ELB in a webbrow
 for i in {0..180}; do echo -ne '.'; sleep 1;done
 
 #create launch configuration
+echo -e "\n-create launch-configuration"
 aws autoscaling create-launch-configuration --launch-configuration-name itmo544-launch-config --image-id $1 --key-name $6 --security-groups $4 --instance-type $3 --user-data file://../itmo-544-env/install-webserver.sh --iam-instance-profile $7
 
 #create autoscaling group
+echo -e "\n-create auto-scaling-group"
 aws autoscaling create-auto-scaling-group --auto-scaling-group-name itmo-544-extended-auto-scaling-group-2 --launch-configuration-name itmo544-launch-config --load-balancer-names itmo544jrx-lb --health-check-type ELB --min-size 3 --max-size 6 --desired-capacity 3 --default-cooldown 600 --health-check-grace-period 120 --vpc-zone-identifier $5
 
 #create rds-instances
+echo -e "\n-create db"
 mapfile -t dbInstanceARR < <(aws rds describe-db-instances --output json | grep "\"DBInstanceIdentifier" | sed "s/[\"\:\, ]//g" | sed "s/DBInstanceIdentifier//g" )
 
 #if [ ${#dbInstanceARR[@]} -gt 0 ]
