@@ -1,6 +1,6 @@
 <?php
 
-require 'vendor/autoload.php';
+require '../itmo-544-env/vendor/autoload.php';
 
 use Aws\Rds\RdsClient;
 $client = RdsClient::factory(array(
