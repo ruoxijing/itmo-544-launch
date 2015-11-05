@@ -1,16 +1,17 @@
 <?php
 
-require 'vendor/autoload.php';
+require '../itmo-544-env/vendor/autoload.php';
 
 use Aws\Rds\RdsClient;
 $client = RdsClient::factory(array(
+'version' =>'latest',
 'region'  => 'us-west-2'
 ));
 
 
-$result = $client->describeDBInstances(array(
-    'DBInstanceIdentifier' => 'itmo544jrxdb',
-));
+#$result = $client->describeDBInstances(array(
+#    'DBInstanceIdentifier' => 'itmo544jrxdb',
+#));
 
 
 #$endpoint = ""; 
