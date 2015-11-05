@@ -1,6 +1,6 @@
 <?php
 
-require '../itmo-544-env/vendor/autoload.php';
+require 'vendor/autoload.php';
 
 use Aws\Rds\RdsClient;
 $client = RdsClient::factory(array(
@@ -9,24 +9,24 @@ $client = RdsClient::factory(array(
 
 
 $result = $client->describeDBInstances(array(
-    'DBInstanceIdentifier' => 'jrxdb',
+    'DBInstanceIdentifier' => 'itmo544jrxdb',
 ));
 
 
-$endpoint = ""; 
+#$endpoint = ""; 
 
 
-foreach ($result->getPath('DBInstances/*/Endpoint/Address') as $ep) {
+#foreach ($result->getPath('DBInstances/*/Endpoint/Address') as $ep) {
     // Do something with the message
-    echo "============". $ep . "================";
-    $endpoint = $ep;
-}
+#    echo "============". $ep . "================";
+#    $endpoint = $ep;
+#}
 
 
 
 echo "begin database";
 #$link = mysqli_connect($endpoint,"controller","ilovebunnies","itmo544db") or die("Error " . mysqli_error($link));
-$link = mysqli_connect($endpoint,"rjing","mypoorphp","jrxdb") or die("Error " . mysqli_error($link));
+$link = mysqli_connect("jrxdb.cwom1zatgb1y.us-west-2.rds.amazonaws.com","rjing","mypoorphp","jrxdb") or die("Error " . mysqli_error($link));
 /* check connection */
 if (mysqli_connect_errno()) {
     printf("Connect failed: %s\n", mysqli_connect_error());
