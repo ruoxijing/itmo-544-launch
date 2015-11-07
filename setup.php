@@ -1,16 +1,16 @@
 <?php
 
-require 'vendor/autoload.php';
+require '../itmo-544-env/vendor/autoload.php';
 
 use Aws\Rds\RdsClient;
 $client = RdsClient::factory(array(
-'version' =>'latest',
+'version'=>'latest',
 'region'  => 'us-west-2'
 ));
 
 
 #$result = $client->describeDBInstances(array(
-#    'DBInstanceIdentifier' => 'jrxdb',
+#    'DBInstanceIdentifier' => 'itmo544jrxdb',
 #));
 
 
@@ -26,10 +26,10 @@ $client = RdsClient::factory(array(
 
 
 echo "begin database";
-
 #$link = mysqli_connect($endpoint,"controller","ilovebunnies","itmo544db") or die("Error " . mysqli_error($link));
 $link = mysqli_connect("jrxdb.cwom1zatgb1y.us-west-2.rds.amazonaws.com","rjing","mypoorphp","jrxdb") or die("Error " . mysqli_error($link));
 /* check connection */
+sleep(1);
 if (mysqli_connect_errno()) {
     printf("Connect failed: %s\n", mysqli_connect_error());
     exit();
