@@ -30,8 +30,8 @@ aws elb register-instances-with-load-balancer --load-balancer-name itmo544jrx-lb
 
 aws elb configure-health-check --load-balancer-name itmo544jrx-lb --health-check Target=HTTP:80/index.html,Interval=30,UnhealthyThreshold=2,HealthyThreshold=2,Timeout=3
 
-echo -e "\nWaiting an additional 3 minutes - before opening the ELB in a webbrowser"
-for i in {0..180}; do echo -ne '.'; sleep 1;done
+echo -e "\nWaiting an additional 20 seconds - before opening the ELB in a webbrowser"
+for i in {0..20}; do echo -ne '.'; sleep 1;done
 
 #create launch configuration
 echo -e "\n-create launch-configuration"
@@ -43,24 +43,23 @@ aws autoscaling create-auto-scaling-group --auto-scaling-group-name itmo-544-ext
 
 #create rds-instances
 echo -e "\n-create db"
+#aws rds create-db-subnet-group --db-subnet-group-name itmo544 --db-subnet-group-description "itmo544" --subnet-ids $5 subnet-84f892f3
 mapfile -t dbInstanceARR < <(aws rds describe-db-instances --output json | grep "\"DBInstanceIdentifier" | sed "s/[\"\:\, ]//g" | sed "s/DBInstanceIdentifier//g" )
-
 #if [ ${#dbInstanceARR[@]} -gt 0 ]
 #   then 
 #echo ${#dbInstanceARR[@]}
-
    LENGTH=${#dbInstanceARR[@]}
 #echo $LENGTH	
-
        for (( i=0; i<=${LENGTH}; i++));
       do
-      if [[ ${dbInstanceARR[i]} == "jrxdb" ]]
+      if [[ ${dbInstanceARR[i]} == "jrx-db" ]]
      then 
       echo "db exists"
      else
-     aws rds create-db-instance --db-instance-identifier jrxdb --db-instance-class db.t1.micro --engine MySQL --master-username rjing --master-user-password mypoorphp --allocated-storage 5
+     aws rds create-db-instance --db-name itmo544mp1 --db-instance-identifier jrx-db --db-instance-class db.t1.micro --engine MySQL --master-username rjing --master-user-password mypoorphp --allocated-storage 5
       fi  
-     done
+      aws rds wait db-instance-available --db-instance-identifier jrx-db
+     done  
 #fi
 
-php ./setup.php
+#php ./setup.php
