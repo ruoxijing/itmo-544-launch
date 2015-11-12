@@ -6,7 +6,7 @@ require '../itmo-544-env/vendor/autoload.php';
 use Aws\Rds\RdsClient;
 $client = RdsClient::factory(array(
 'version'=>'latest',
-'region'=> 'us-east-1'
+'region'=> 'us-west-2'
 ));
 
 
@@ -15,25 +15,25 @@ $client = RdsClient::factory(array(
 #'region'  => 'us-west-2'
 #));
 
-$result = $client->describeDBInstances(array(
-    'DBInstanceIdentifier' => 'jrx-db',
-));
+#$result = $client->describeDBInstances(array(
+#    'DBInstanceIdentifier' => 'jrx-db',
+#));
 
 $endpoint = ""; 
 
-foreach ($result->getPath('DBInstances/*/Endpoint/Address') as $ep) {
+#foreach ($result->getPath('DBInstances/*/Endpoint/Address') as $ep) {
     // Do something with the message
-    echo "============". $ep . "================";
-    $endpoint = $ep;
-}
+#    echo "============". $ep . "================";
+#    $endpoint = $ep;
+#}
 
-#$result = $rds->waitUntil('DBInstanceAvailable',['DBInstanceIdentifier' => 'jrx-db'
-#]);
-#print_r($result);
-#$endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
-#    echo "============\n". $endpoint . "================";
+$result = $client->waitUntil('DBInstanceAvailable',['DBInstanceIdentifier' => 'jrx-db',
+]);
+print_r($result);
+$endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
+    echo "============\n". $endpoint . "================";
 
-#print_r($endpoint);  
+print_r($endpoint);  
 echo "begin database";
 #$link = mysqli_connect($endpoint,"controller","ilovebunnies","itmo544db",3306) or die("Error " . mysqli_error($link));
 #$link = mysqli_connect("jrx-db.cwom1zatgb1y.us-west-2.rds.amazonaws.com","rjing","mypoorphp","itmo544mp1") or die("Error " . mysqli_error($link));
