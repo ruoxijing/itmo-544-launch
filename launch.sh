@@ -1,5 +1,7 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 
+#!/usr/local/bin/bash 
+#for mac
 ./cleanup.sh
 
 #declare an array in bash 
@@ -31,7 +33,7 @@ aws elb register-instances-with-load-balancer --load-balancer-name itmo544jrx-lb
 aws elb configure-health-check --load-balancer-name itmo544jrx-lb --health-check Target=HTTP:80/index.html,Interval=30,UnhealthyThreshold=2,HealthyThreshold=2,Timeout=3
 
 echo -e "\nWaiting an additional 20 seconds - before opening the ELB in a webbrowser"
-for i in {0..20}; do echo -ne '.'; sleep 1;done
+for i in {0..10}; do echo -ne '.'; sleep 1;done
 
 #create launch configuration
 echo -e "\n-create launch-configuration"
@@ -43,7 +45,7 @@ aws autoscaling create-auto-scaling-group --auto-scaling-group-name itmo-544-ext
 
 #create rds-instances
 echo -e "\n-create db"
-#aws rds create-db-subnet-group --db-subnet-group-name itmo544 --db-subnet-group-description "itmo544" --subnet-ids $5 subnet-84f892f3
+aws rds create-db-subnet-group --db-subnet-group-name itmo544 --db-subnet-group-description "itmo544" --subnet-ids $5 subnet-84f892f3
 mapfile -t dbInstanceARR < <(aws rds describe-db-instances --output json | grep "\"DBInstanceIdentifier" | sed "s/[\"\:\, ]//g" | sed "s/DBInstanceIdentifier//g" )
 #if [ ${#dbInstanceARR[@]} -gt 0 ]
 #   then 
@@ -52,14 +54,12 @@ mapfile -t dbInstanceARR < <(aws rds describe-db-instances --output json | grep 
 #echo $LENGTH	
        for (( i=0; i<=${LENGTH}; i++));
       do
-      if [[ ${dbInstanceARR[i]} == "jrx-db" ]]
+      if [[ ${dbInstanceARR[i]} == "jrxdb" ]]
      then 
       echo "db exists"
      else
-     aws rds create-db-instance --db-name itmo544mp1 --db-instance-identifier jrx-db --db-instance-class db.t1.micro --engine MySQL --master-username rjing --master-user-password mypoorphp --allocated-storage 5
+     aws rds create-db-instance --db-name itmo544mp1 --db-instance-identifier jrxdb --db-instance-class db.t1.micro --engine MySQL --master-username rjing --master-user-password mypoorphp --allocated-storage 5 --db-subnet-group-name itmo544 --publicly-accessible
       fi  
-      aws rds wait db-instance-available --db-instance-identifier jrx-db
+      aws rds wait db-instance-available --db-instance-identifier jrxdb
      done  
 #fi
-
-#php ./setup.php
