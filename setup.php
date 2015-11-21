@@ -6,7 +6,7 @@ require '../itmo-544-env/vendor/autoload.php';
 use Aws\Rds\RdsClient;
 $client = RdsClient::factory(array(
 'version'=>'latest',
-'region'=> 'us-west-2'
+'region'=> 'us-east-1'
 ));
 
 
@@ -19,7 +19,7 @@ $client = RdsClient::factory(array(
 #    'DBInstanceIdentifier' => 'jrx-db',
 #));
 
-$endpoint = ""; 
+#$endpoint = ""; 
 
 #foreach ($result->getPath('DBInstances/*/Endpoint/Address') as $ep) {
     // Do something with the message
@@ -27,17 +27,19 @@ $endpoint = "";
 #    $endpoint = $ep;
 #}
 
-$result = $client->waitUntil('DBInstanceAvailable',['DBInstanceIdentifier' => 'jrx-db',
-]);
-print_r($result);
-$endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
-    echo "============\n". $endpoint . "================";
+#$result = $client->waitUntil('DBInstanceAvailable',['DBInstanceIdentifier' => 'jrx-db',
+#]);
+#print_r($result);
+#$endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
+#    echo "============\n". $endpoint . "================";
 
-print_r($endpoint);  
-echo "begin database";
+#print_r($endpoint);  
+#echo "begin database";
 #$link = mysqli_connect($endpoint,"controller","ilovebunnies","itmo544db",3306) or die("Error " . mysqli_error($link));
 #$link = mysqli_connect("jrx-db.cwom1zatgb1y.us-west-2.rds.amazonaws.com","rjing","mypoorphp","itmo544mp1") or die("Error " . mysqli_error($link));
-$link = mysqli_connect($endpoint,"rjing","mypoorphp","itmo544mp1") or die("Error " . mysqli_error($link));
+$link = mysqli_connect("jrxdb.ctwa8lj8lt5b.us-east-1.rds.amazonaws.com","rjing","mypoorphp","itmo544mp1") or die("Error " . mysqli_error($link));
+
+#$link = mysqli_connect($endpoint,"rjing","mypoorphp","itmo544mp1") or die("Error " . mysqli_error($link));
 /* check connection */
 if (mysqli_connect_errno()) {
     printf("Connect failed: %s\n", mysqli_connect_error());
