@@ -1,4 +1,3 @@
-#!/bin/bash
 
 #!/usr/local/bin/bash 
 #for mac
@@ -33,7 +32,7 @@ aws elb register-instances-with-load-balancer --load-balancer-name itmo544jrx-lb
 aws elb configure-health-check --load-balancer-name itmo544jrx-lb --health-check Target=HTTP:80/index.html,Interval=30,UnhealthyThreshold=2,HealthyThreshold=2,Timeout=3
 
 echo -e "\nWaiting an additional 20 seconds - before opening the ELB in a webbrowser"
-for i in {0..10}; do echo -ne '.'; sleep 1;done
+for i in {0..30}; do echo -ne '.'; sleep 1;done
 
 #create launch configuration
 echo -e "\n-create launch-configuration"
@@ -45,7 +44,7 @@ aws autoscaling create-auto-scaling-group --auto-scaling-group-name itmo-544-ext
 
 #create rds-instances
 echo -e "\n-create db"
-aws rds create-db-subnet-group --db-subnet-group-name itmo544 --db-subnet-group-description "itmo544" --subnet-ids $5 subnet-84f892f3
+aws rds create-db-subnet-group --db-subnet-group-name itmo544 --db-subnet-group-description "itmo544" --subnet-ids $5 subnet-e2c97edf
 mapfile -t dbInstanceARR < <(aws rds describe-db-instances --output json | grep "\"DBInstanceIdentifier" | sed "s/[\"\:\, ]//g" | sed "s/DBInstanceIdentifier//g" )
 #if [ ${#dbInstanceARR[@]} -gt 0 ]
 #   then 
@@ -63,3 +62,12 @@ mapfile -t dbInstanceARR < <(aws rds describe-db-instances --output json | grep 
       aws rds wait db-instance-available --db-instance-identifier jrxdb
      done  
 #fi
+
+#sns service
+ARN=(`aws sns create-topic --name mp2`)
+
+echo "This is the ARN: $ARN"
+
+aws sns set-topic-attributes --topic-arn $ARN --attribute-name DisplayName --attribute-value mp2
+
+aws sns subscribe --topic-arm $ARN --protocal sms --notification-endpoint 13127215036
