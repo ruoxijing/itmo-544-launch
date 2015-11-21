@@ -70,4 +70,4 @@ echo "This is the ARN: $ARN"
 
 aws sns set-topic-attributes --topic-arn $ARN --attribute-name DisplayName --attribute-value mp2
 
-aws sns subscribe --topic-arm $ARN --protocal sms --notification-endpoint 13127215036
+aws sns subscribe --topic-arn $ARN --protocal sms --notification-endpoint 13127215036
