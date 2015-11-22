@@ -63,5 +63,12 @@ aws autoscaling delete-launch-configuration --launch-configuration-name ${LAUNCH
 
 #aws autoscaling update-auto-scaling-group --auto-scaling-group-name $SCALENAME --min-size 0 --max-size 0
 
+CLOUD=(`aws cloudwatch describe-alarms --output json | grep AlarmName | sed "s/[\"\:\, ]//g" | sed "s/AlarmName//g"`)
+aws cloudwatch delete-alarms --alarm-name ${CLOUD[@]}
+echo "cloudwatch to delete..."
+
+#SNS=(`aws sns get-topic-attributes --output json | grep arn:aws:sns:us | sed "s/[\"\:\, ]//g" | sed "s/LaunchConfigurationName//g"`)
+aws sns delete-topic --topic-arn arn:aws:sns:us-east-1:242070831304:mp2
+
 fi
 echo "All done"
