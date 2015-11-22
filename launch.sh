@@ -44,7 +44,7 @@ aws autoscaling create-auto-scaling-group --auto-scaling-group-name itmo-544-ext
 
 #create rds-instances
 echo -e "\n-create db"
-aws rds create-db-subnet-group --db-subnet-group-name itmo544 --db-subnet-group-description "itmo544" --subnet-ids $5 subnet-e2c97edf
+aws rds create-db-subnet-group --db-subnet-group-name itmo544 --db-subnet-group-description "itmo544" --subnet-ids $5 subnet-16adbe4f
 mapfile -t dbInstanceARR < <(aws rds describe-db-instances --output json | grep "\"DBInstanceIdentifier" | sed "s/[\"\:\, ]//g" | sed "s/DBInstanceIdentifier//g" )
 #if [ ${#dbInstanceARR[@]} -gt 0 ]
 #   then 
@@ -73,3 +73,8 @@ aws sns set-topic-attributes --topic-arn $ARN --attribute-name DisplayName --att
 aws sns subscribe --topic-arn $ARN --protocol sms --notification-endpoint 13127215036
 
 aws sns publish --topic-arn $ARN --message "best code"
+
+#cloudwatch AddCapacity
+aws cloudwatch put-metric-alarm --alarm-name AddCapacity-mp2 --alarm-description "Alarm when CPU exceeds 30 percent" --metric-name CPUUtilization --namespace AWS/EC2 --statistic Average --period 120 --threshold 30 --comparison-operator GreaterThanOrEqualToThreshold --dimensions Name=LoadBalancerName,Value=itmo544jrx-lb --evaluation-periods 2 --alarm-actions $ARN --unit Percent
+#cloudwatch RemoveCapacity
+aws cloudwatch put-metric-alarm --alarm-name RemoveCapacity-mp2 --alarm-description "Alarm when CPU recedes 10 percent" --metric-name CPUUtilization --namespace AWS/EC2 --statistic Average --period 120 --threshold 10 --comparison-operator LessThanOrEqualToThreshold --dimensions Name=LoadBalancerName,Value=itmo544jrx-lb --evaluation-periods 2 --alarm-actions $ARN --unit Percent
